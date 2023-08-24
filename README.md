@@ -1,11 +1,11 @@
 # WifiConnect
 Connect to an available Wifi network via a QR code on Windows.
 
-Connect to a Wifi using a QR code utilizing [this format](https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network), used by Android and IOS 11+ (further information [here](https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network)).
+Connect to a Wifi using a QR code utilizing [this format](https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network), used by Android and iOS 11+ (further information [here](https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network)).
 
 ## What does this do?
 
-This tries to connect to an available wireless network, based on a QR code, containing required information.
+This tries to connect to an available wireless network, based on a [QR code](https://en.wikipedia.org/wiki/QR_code), containing required information.
 
 ## What do I need?
 
