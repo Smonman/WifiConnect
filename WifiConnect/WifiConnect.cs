@@ -1,5 +1,6 @@
 ﻿using WifiConnect.Decoder;
 using WifiConnect.Wifi.Manager;
+using WifiConnect.Wifi.URI;
 using WifiConnect.Wifi.URI.Parser;
 using static WifiConnect.Wifi.Manager.IWifiManager;
 
@@ -42,12 +43,12 @@ namespace WifiConnect
             }
         }
 
-        private void TryToConnectFromUri(string uri)
+        private void TryToConnectFromUri(string rawUri)
         {
             try
             {
-                IWifiUriParser.WifiUriComponents components = this.uriParser.Parse(uri);
-                this.wifiManager.Connect(components.SSID, components.Pass);
+                WifiUri uri = this.uriParser.Parse(rawUri);
+                this.wifiManager.Connect(uri.SSID, uri.Pass);
             }
             catch (InvalidFormatException)
             {

@@ -2,28 +2,33 @@
 {
     internal class WifiUriParser : IWifiUriParser
     {
-        public IWifiUriParser.WifiUriComponents Parse(string uri)
+        public WifiUri Parse(string uri)
         {
             if (!((IWifiUriParser)this).IsWifiUri(uri))
             {
                 throw new InvalidFormatException();
             }
-            string[] fields = uri[IWifiUriParser.SCHEME.Length..].Split(IWifiUriParser.FIELD_DELIMITER);
-            IWifiUriParser.WifiUriComponents uriComponents = new();
+            string[] fields = uri[WifiUri.SCHEME.Length..].Split(WifiUri.FIELD_DELIMITER);
+            WifiUri.WifiUriBuilder builder = WifiUri.Builder();
             foreach (string field in fields)
             {
-                ParseField(field, uriComponents);
+                ParseField(field, builder);
             }
-            return uriComponents;
+            return builder.Build();
         }
 
-        private static void ParseField(string field, IWifiUriParser.WifiUriComponents uriComponents)
+        private static void ParseField(string field, WifiUri.WifiUriBuilder builder)
         {
-            string[] fieldParts = field.Split(IWifiUriParser.DELIMITER);
+            string[] fieldParts = field.Split(WifiUri.DELIMITER);
             if (fieldParts.Length == 2)
             {
-                uriComponents.SetComponent(fieldParts[0], fieldParts[1]);
+                _ = builder.Set(fieldParts[0], fieldParts[1]);
             }
+        }
+
+        WifiUri IWifiUriParser.Parse(string uri)
+        {
+            throw new NotImplementedException();
         }
     }
 }
