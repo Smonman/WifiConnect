@@ -18,4 +18,8 @@ This tries to connect to an available wireless network, based on a [QR code](htt
 
 ## Is this secure?
 
-It is important to note, that information contained in the QR code will be used as-is by this application. The application never shows this information explicitly (apart from the networks name), nor does it persit it outside of its livecycle.
+It is important to note, that information contained in the QR code will be used as-is by this application. The application never shows this information explicitly (apart from the networks name), nor does it persit it outside of its lifecycle.
+
+## What must the QR code contain?
+
+Take a look at [this format](https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network).
