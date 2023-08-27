@@ -34,9 +34,8 @@
             PictureBox = new PictureBox();
             StatusStrip = new StatusStrip();
             StatusLabel = new ToolStripStatusLabel();
-            this.Timer = new System.Windows.Forms.Timer(this.components);
-            StatusProgressBar = new ToolStripProgressBar();
             MessageLabel = new ToolStripStatusLabel();
+            this.Timer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)PictureBox).BeginInit();
             StatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -71,7 +70,7 @@
             // 
             // StatusStrip
             // 
-            StatusStrip.Items.AddRange(new ToolStripItem[] { StatusProgressBar, StatusLabel, MessageLabel });
+            StatusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, MessageLabel });
             StatusStrip.Location = new Point(0, 539);
             StatusStrip.Name = "StatusStrip";
             StatusStrip.Size = new Size(484, 22);
@@ -85,23 +84,17 @@
             StatusLabel.Size = new Size(118, 17);
             StatusLabel.Text = "toolStripStatusLabel1";
             // 
-            // Timer
-            // 
-            this.Timer.Interval = 1000;
-            this.Timer.Tick += this.Timer_Tick;
-            // 
-            // StatusProgressBar
-            // 
-            StatusProgressBar.Name = "StatusProgressBar";
-            StatusProgressBar.Size = new Size(100, 16);
-            StatusProgressBar.Style = ProgressBarStyle.Marquee;
-            // 
             // MessageLabel
             // 
             MessageLabel.DisplayStyle = ToolStripItemDisplayStyle.Text;
             MessageLabel.Name = "MessageLabel";
             MessageLabel.Size = new Size(118, 17);
             MessageLabel.Text = "toolStripStatusLabel1";
+            // 
+            // Timer
+            // 
+            this.Timer.Interval = 1000;
+            this.Timer.Tick += this.Timer_Tick;
             // 
             // MainForm
             // 
@@ -134,7 +127,6 @@
         private StatusStrip StatusStrip;
         private ToolStripStatusLabel StatusLabel;
         private System.Windows.Forms.Timer Timer;
-        private ToolStripProgressBar StatusProgressBar;
         private ToolStripStatusLabel MessageLabel;
     }
 }

@@ -2,6 +2,7 @@
 using WifiConnect.Wifi.Manager;
 using WifiConnect.Wifi.URI;
 using WifiConnect.Wifi.URI.Parser;
+using WifiConnect.Wifi.URI.Parser.Validation;
 using static WifiConnect.Wifi.Manager.IWifiManager;
 
 namespace WifiConnect
@@ -48,9 +49,12 @@ namespace WifiConnect
             try
             {
                 WifiUri uri = this.uriParser.Parse(rawUri);
-                this.wifiManager.Connect(uri.SSID, uri.Pass);
+                this.wifiManager.Connect(
+                    uri.GetField(WifiUri.FieldName.SSID)?.Value,
+                    uri.GetField(WifiUri.FieldName.PASS)?.Value
+                );
             }
-            catch (InvalidFormatException)
+            catch (Exception e) when (e is InvalidFormatException or ValidationException)
             {
                 this.OnParserFailure();
             }

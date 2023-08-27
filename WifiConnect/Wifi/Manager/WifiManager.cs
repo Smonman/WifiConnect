@@ -18,9 +18,21 @@ namespace WifiConnect.Wifi.Manager
 
         public void Connect(string SSID, string? pass)
         {
+            if (this.wifi.NoWifiAvailable)
+            {
+                throw new InvalidOperationException("no wifi card available");
+            }
+
             this.OnWifiConnectionStart();
-            AccessPoint accessPoint = this.GetAccessPointBySSID(SSID);
-            this.ConnectToAccessPoint(accessPoint, pass);
+            try
+            {
+                AccessPoint accessPoint = this.GetAccessPointBySSID(SSID);
+                this.ConnectToAccessPoint(accessPoint, pass);
+            }
+            catch (Exception)
+            {
+                this.OnWifiConnectionEnd(SSID, false);
+            }
         }
 
         private IEnumerable<AccessPoint> SearchForAccessPoints()
@@ -46,14 +58,11 @@ namespace WifiConnect.Wifi.Manager
                     {
                         throw new NotImplementedException();
                     }
-                    if (authRequest.IsPasswordRequired)
-                    {
-                        authRequest.Password = pass;
-                    }
                     if (authRequest.IsDomainSupported)
                     {
                         throw new NotImplementedException();
                     }
+                    authRequest.Password = pass;
                 }
             }
             accessPoint.ConnectAsync(authRequest, false, (success) =>

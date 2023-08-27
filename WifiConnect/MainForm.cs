@@ -31,7 +31,6 @@ namespace WifiConnect
 
         public void StartScanning()
         {
-            this.StatusProgressBar.Enabled = true;
             this.SwitchCaptureDevice();
             this.StatusLabel.Text = STATUS_SCANNING;
             this.Timer.Start();
@@ -77,6 +76,7 @@ namespace WifiConnect
             }
             else
             {
+                newFrame.RotateFlip(RotateFlipType.RotateNoneFlipX);
                 this.PictureBox.Image = (Image)newFrame.Clone();
             }
         }
@@ -84,8 +84,7 @@ namespace WifiConnect
         private void InitComponentValues()
         {
             this.StatusLabel.Text = STATUS_NONE;
-            this.StatusLabel.Text = MESSAGE_NONE;
-            this.StatusProgressBar.Value = 0;
+            this.MessageLabel.Text = MESSAGE_NONE;
             this.InitCameraSelection();
         }
 
@@ -207,7 +206,7 @@ namespace WifiConnect
             else
             {
                 this.MessageLabel.Text = MESSAGE_CONNECTING_FAILURE;
-                DialogResult res = MessageBox.Show($"Could not connect to Wifi: '{e.SSID}'", "Connection Failure", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                DialogResult res = MessageBox.Show($"Could not connect to Wifi: '{e.SSID}'\nMake sure that the adapter is enabled.", "Connection Failure", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 if (res == DialogResult.Cancel)
                 {
                     Application.Exit();
