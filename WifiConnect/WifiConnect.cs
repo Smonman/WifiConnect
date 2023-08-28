@@ -1,8 +1,8 @@
 ﻿using WifiConnect.Decoder;
 using WifiConnect.Wifi.Manager;
 using WifiConnect.Wifi.URI;
+using WifiConnect.Wifi.URI.Field;
 using WifiConnect.Wifi.URI.Parser;
-using WifiConnect.Wifi.URI.Parser.Validation;
 using static WifiConnect.Wifi.Manager.IWifiManager;
 
 namespace WifiConnect
@@ -49,12 +49,18 @@ namespace WifiConnect
             try
             {
                 WifiUri uri = this.uriParser.Parse(rawUri);
+                WifiUriField? SSID = uri.GetField(WifiUri.FieldName.SSID);
+                WifiUriField? pass = uri.GetField(WifiUri.FieldName.PASS);
+                if (SSID == null)
+                {
+                    throw new InvalidOperationException("ssid must not be null");
+                }
                 this.wifiManager.Connect(
-                    uri.GetField(WifiUri.FieldName.SSID)?.Value,
-                    uri.GetField(WifiUri.FieldName.PASS)?.Value
+                    SSID.Value,
+                    pass?.Value
                 );
             }
-            catch (Exception e) when (e is InvalidFormatException or ValidationException)
+            catch (Exception)
             {
                 this.OnParserFailure();
             }

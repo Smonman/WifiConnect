@@ -7,7 +7,22 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject>WifiConnect.Program</StartupObject>
+    <Title>WifiConnect</Title>
+    <Authors>Simon J. Kreuzpointner</Authors>
+    <Description>Connect to an available Wifi network via a QR code on Windows.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Smonman/WifiConnect</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>qrcode, wifi, connect, windows</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AForge" Version="2.2.5" />

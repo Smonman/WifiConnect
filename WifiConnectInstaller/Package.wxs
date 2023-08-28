@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?define Name = "WifiConnect" ?>
+<?define Manufacturer = "Simon J. Kreuzpointner" ?>
+<?define Version = "1.0.0.0" ?>
+<?define UpgradeCode = "9fdda9a2-e56e-4d77-9aae-01ab130f2e83" ?>
+
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package
+    Name="$(Name)"
+    Manufacturer="$(Manufacturer)"
+    Version="$(Version)"
+    UpgradeCode="$(var.UpgradeCode)">
+
+    <!-- Allow upgrades and prevent downgrades -->
+    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="ROOTDIRECTORY" Name="$(var.Manufacturer)">
+          <Directory Id="INSTALLDIR" Name="$(Name)" />
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="WifiConnect.exe" Bitness="always64">
+        <File Id="WifiConnect.exe" Source="$(var.WifiConnect.TargetDir)publish\WifiConnect.exe"></File>
+        <RemoveFile Id="ALLFILES" Name="*.*" On="uninstall" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="Main">
+      <ComponentRef Id="WifiConnect.exe" />
+    </Feature>
+
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLDIR" />
+  </Package>
+</Wix>

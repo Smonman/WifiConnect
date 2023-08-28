@@ -71,7 +71,7 @@
             // StatusStrip
             // 
             StatusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, MessageLabel });
-            StatusStrip.Location = new Point(0, 539);
+            StatusStrip.Location = new Point(0, 506);
             StatusStrip.Name = "StatusStrip";
             StatusStrip.Size = new Size(484, 22);
             StatusStrip.TabIndex = 3;
@@ -100,7 +100,7 @@
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(484, 561);
+            this.ClientSize = new Size(484, 528);
             this.Controls.Add(StatusStrip);
             this.Controls.Add(PictureBox);
             this.Controls.Add(label1);

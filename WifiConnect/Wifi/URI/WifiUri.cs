@@ -41,7 +41,7 @@ namespace WifiConnect.Wifi.URI
         {
             return this.Fields
                 .Where(e => e != null)
-                .FirstOrDefault(e => e.Name == fieldName, null);
+                .FirstOrDefault(e => e?.Name == fieldName, null);
         }
     }
 }
