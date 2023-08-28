@@ -1,4 +1,6 @@
-﻿namespace WifiConnect.Wifi.URI.Parser.Validation
+﻿using System.Runtime.Serialization;
+
+namespace WifiConnect.Wifi.URI.Parser.Validation
 {
     [Serializable]
     internal class ValidationException : Exception
@@ -10,7 +12,7 @@
         public ValidationException(string message, Exception inner) : base(message, inner) { }
 
         protected ValidationException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+            SerializationInfo info,
+            StreamingContext context) : base(info, context) { }
     }
 }

@@ -3,14 +3,14 @@ using WifiConnect.Wifi.URI.Parser.Validation.Generic;
 
 namespace WifiConnect.Wifi.URI.Field
 {
-    internal class WifiUriSSIDField : WifiUriField
+    internal class WifiUriSsidField : WifiUriField
     {
-        public WifiUriSSIDField(string value)
-            : base(WifiUri.FieldName.SSID, value) { }
+        public WifiUriSsidField(string value)
+            : base(WifiUri.FieldName.Ssid, value) { }
 
         public override IEnumerable<IValidator<string>> GetValidators()
         {
-            return new List<IValidator<string>>()
+            return new List<IValidator<string>>
             {
                 new IsNotEmptyValidator()
             };

@@ -6,11 +6,11 @@ namespace WifiConnect.Wifi.URI.Field
     internal class WifiUriPassField : WifiUriField
     {
         public WifiUriPassField(string value)
-            : base(WifiUri.FieldName.PASS, value) { }
+            : base(WifiUri.FieldName.Pass, value) { }
 
         public override IEnumerable<IValidator<string>> GetValidators()
         {
-            return new List<IValidator<string>>()
+            return new List<IValidator<string>>
             {
                 new IsNotEmptyValidator()
             };

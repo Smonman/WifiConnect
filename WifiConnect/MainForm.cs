@@ -7,38 +7,27 @@ namespace WifiConnect
 {
     public partial class MainForm : Form
     {
-        private FilterInfoCollection? captureDevices;
-        private VideoCaptureDevice? selectedDevice;
-        private NewFrameEventHandler? newFrameEventHandler;
+        private const string StatusNone = "";
+        private const string StatusScanning = "scanning";
+        private const string StatusDecoding = "decoding";
+        private const string StatusConnecting = "connecting";
+        private const string MessageNone = "";
+        private const string MessageDecodingSuccess = "successfully decoded";
+        private const string MessageDecodingFailure = "cannot decode";
+        private const string MessageParsingFailure = "unsupported format";
+        private const string MessageConnectingSuccess = "successfully connected";
+        private const string MessageConnectingFailure = "cannot connect";
+        private readonly VideoSourceErrorEventHandler? videoSourceErrorEventHandler;
         private readonly WifiConnect wifiConnect;
-
-        private const string STATUS_NONE = "";
-        private const string STATUS_SCANNING = "scanning";
-        private const string STATUS_DECODING = "decoding";
-        private const string STATUS_CONNECTING = "connecting";
-        private const string MESSAGE_NONE = "";
-        private const string MESSAGE_DECODING_SUCCESS = "successfully decoded";
-        private const string MESSAGE_DECODING_FAILURE = "cannot decode";
-        private const string MESSAGE_PARSING_FAILURE = "unsupported format";
-        private const string MESSAGE_CONNECTING_SUCCESS = "successfully connected";
-        private const string MESSAGE_CONNECTING_FAILURE = "cannot connect";
+        private FilterInfoCollection? captureDevices;
+        private NewFrameEventHandler? newFrameEventHandler;
+        private VideoCaptureDevice? selectedDevice;
 
         public MainForm()
         {
             this.InitializeComponent();
             this.wifiConnect = new WifiConnect();
-        }
-
-        public void StartScanning()
-        {
-            this.SwitchCaptureDevice();
-            this.StatusLabel.Text = STATUS_SCANNING;
-            this.Timer.Start();
-        }
-
-        public void StopScanning()
-        {
-            this.Timer.Stop();
+            this.videoSourceErrorEventHandler = this.VideoSource_Error;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -63,13 +52,13 @@ namespace WifiConnect
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            Bitmap image = (Bitmap)this.PictureBox.Image;
+            Bitmap? image = (Bitmap)this.PictureBox.Image;
             this.wifiConnect.TryToConnectFromImage(image);
         }
 
         private void SelectedDevice_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            Bitmap newFrame = eventArgs.Frame;
+            Bitmap? newFrame = eventArgs.Frame;
             if (newFrame == null)
             {
                 this.ClearPictureBox();
@@ -81,10 +70,22 @@ namespace WifiConnect
             }
         }
 
+        private void StartScanning()
+        {
+            this.SwitchCaptureDevice();
+            this.StatusLabel.Text = StatusScanning;
+            this.Timer.Start();
+        }
+
+        private void StopScanning()
+        {
+            this.Timer.Stop();
+        }
+
         private void InitComponentValues()
         {
-            this.StatusLabel.Text = STATUS_NONE;
-            this.MessageLabel.Text = MESSAGE_NONE;
+            this.StatusLabel.Text = StatusNone;
+            this.MessageLabel.Text = MessageNone;
             this.InitCameraSelection();
         }
 
@@ -95,6 +96,7 @@ namespace WifiConnect
             {
                 _ = this.CamerasComboBox.Items.Add(device.Name);
             }
+
             if (this.captureDevices.Count > 0)
             {
                 this.CamerasComboBox.SelectedIndex = 0;
@@ -108,16 +110,17 @@ namespace WifiConnect
             this.wifiConnect.ManagerConnectingStart += this.Manager_Start;
             this.wifiConnect.ManagerConnectingEnd += this.Manager_End;
             this.wifiConnect.ParserFailure += this.Parser_Failure;
+            this.wifiConnect.ConnectionFailure += this.Connection_Failure;
         }
 
         private void DeregisterEvents()
         {
-
             this.wifiConnect.DecoderStart -= this.Decoder_Start;
             this.wifiConnect.DecoderEnd -= this.Decoder_End;
             this.wifiConnect.ManagerConnectingStart -= this.Manager_Start;
             this.wifiConnect.ManagerConnectingEnd -= this.Manager_End;
             this.wifiConnect.ParserFailure -= this.Parser_Failure;
+            this.wifiConnect.ConnectionFailure -= this.Connection_Failure;
         }
 
         private void SwitchCaptureDevice()
@@ -131,9 +134,10 @@ namespace WifiConnect
             if (this.captureDevices != null && this.captureDevices.Count > 0)
             {
                 int selectedDeviceIndex = this.CamerasComboBox.SelectedIndex;
-                this.newFrameEventHandler = new NewFrameEventHandler(this.SelectedDevice_NewFrame);
                 this.selectedDevice = new VideoCaptureDevice(this.captureDevices[selectedDeviceIndex].MonikerString);
+                this.newFrameEventHandler = this.SelectedDevice_NewFrame;
                 this.selectedDevice.NewFrame += this.newFrameEventHandler;
+                this.selectedDevice.VideoSourceError += this.videoSourceErrorEventHandler;
                 this.selectedDevice.Start();
             }
         }
@@ -147,6 +151,9 @@ namespace WifiConnect
                     this.selectedDevice.NewFrame -= this.newFrameEventHandler;
                     this.newFrameEventHandler = null;
                 }
+
+                this.selectedDevice.VideoSourceError -= this.videoSourceErrorEventHandler;
+
                 this.selectedDevice.SignalToStop();
                 this.selectedDevice.WaitForStop();
                 this.selectedDevice = null;
@@ -174,20 +181,20 @@ namespace WifiConnect
 
         private void Decoder_Start(object? sender, EventArgs e)
         {
-            this.StatusLabel.Text = STATUS_DECODING;
-            this.MessageLabel.Text = MESSAGE_NONE;
+            this.StatusLabel.Text = StatusDecoding;
+            this.MessageLabel.Text = MessageNone;
         }
 
         private void Decoder_End(object? sender, DecoderEventArgs e)
         {
-            this.StatusLabel.Text = STATUS_SCANNING;
-            this.MessageLabel.Text = e.Success ? MESSAGE_DECODING_SUCCESS : MESSAGE_DECODING_FAILURE;
+            this.StatusLabel.Text = StatusScanning;
+            this.MessageLabel.Text = e.Success ? MessageDecodingSuccess : MessageDecodingFailure;
         }
 
         private void Manager_Start(object? sender, EventArgs e)
         {
-            this.StatusLabel.Text = STATUS_CONNECTING;
-            this.MessageLabel.Text = MESSAGE_NONE;
+            this.StatusLabel.Text = StatusConnecting;
+            this.MessageLabel.Text = MessageNone;
             this.StopScanning();
         }
 
@@ -195,8 +202,11 @@ namespace WifiConnect
         {
             if (e.Connected)
             {
-                this.MessageLabel.Text = MESSAGE_CONNECTING_SUCCESS;
-                DialogResult res = MessageBox.Show($"Successfully connected to Wifi: '{e.SSID}'.\nClose this application?", "Connection Success", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                this.MessageLabel.Text = MessageConnectingSuccess;
+                DialogResult res = MessageBox.Show(
+                    $"Successfully connected to Wifi: '{e.Ssid}'.\nClose this application?",
+                    "Connection Success", MessageBoxButtons.YesNo, MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1);
                 if (res == DialogResult.Yes)
                 {
                     Application.Exit();
@@ -205,20 +215,43 @@ namespace WifiConnect
             }
             else
             {
-                this.MessageLabel.Text = MESSAGE_CONNECTING_FAILURE;
-                DialogResult res = MessageBox.Show($"Could not connect to Wifi: '{e.SSID}'\nMake sure that the adapter is enabled.", "Connection Failure", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                this.MessageLabel.Text = MessageConnectingFailure;
+                DialogResult res = MessageBox.Show(
+                    $"Could not connect to Wifi: '{e.Ssid}'\nMake sure that the adapter is enabled.",
+                    "Connection Failure", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1);
                 if (res == DialogResult.Cancel)
                 {
                     Application.Exit();
                     return;
                 }
             }
+
             this.StartScanning();
         }
 
         private void Parser_Failure(object? sender, EventArgs e)
         {
-            this.MessageLabel.Text = MESSAGE_PARSING_FAILURE;
+            this.MessageLabel.Text = MessageParsingFailure;
+        }
+
+        private void Connection_Failure(object? sender, EventArgs e)
+        {
+            this.MessageLabel.Text = MessageConnectingFailure;
+            if (MessageBox.Show("Could not connect to the network.\nMake sure to have the Wifi option enabled.",
+                    "Error",
+                    MessageBoxButtons.RetryCancel, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) ==
+                DialogResult.Cancel)
+            {
+                Application.Exit();
+            }
+        }
+
+        private void VideoSource_Error(object? sender, VideoSourceErrorEventArgs e)
+        {
+            MessageBox.Show(
+                $"An unexpected error occured:\n{e.Description}\nPlease try again later or with a different camera.",
+                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

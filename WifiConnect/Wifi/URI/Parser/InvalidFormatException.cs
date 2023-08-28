@@ -3,7 +3,7 @@
     [Serializable]
     internal class InvalidFormatException : Exception
     {
-        public InvalidFormatException() : base() { }
+        public InvalidFormatException() { }
 
         public InvalidFormatException(string message) : base(message) { }
 

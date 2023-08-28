@@ -4,14 +4,14 @@
     {
         public class WifiEventArgs : EventArgs
         {
-            public string SSID { get; private set; }
-            public bool Connected { get; private set; }
-
-            public WifiEventArgs(string SSID, bool connected) : base()
+            public WifiEventArgs(string ssid, bool connected)
             {
-                this.SSID = SSID;
+                this.Ssid = ssid;
                 this.Connected = connected;
             }
+
+            public string Ssid { get; private set; }
+            public bool Connected { get; private set; }
         }
     }
 }

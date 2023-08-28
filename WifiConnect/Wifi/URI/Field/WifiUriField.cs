@@ -4,14 +4,14 @@ namespace WifiConnect.Wifi.URI.Field
 {
     internal abstract class WifiUriField : Validateable<string>
     {
-        public WifiUri.FieldName Name { get; private set; }
-        public string Value { get; private set; }
-
         protected WifiUriField(WifiUri.FieldName name, string value)
         {
             this.Name = name;
             this.Value = value;
         }
+
+        public WifiUri.FieldName Name { get; private set; }
+        public string Value { get; }
 
         public override void Validate()
         {

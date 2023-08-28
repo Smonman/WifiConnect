@@ -9,12 +9,6 @@ namespace WifiConnect
 {
     internal class WifiConnect
     {
-        public event EventHandler<EventArgs>? DecoderStart;
-        public event EventHandler<DecoderEventArgs>? DecoderEnd;
-        public event EventHandler<EventArgs>? ManagerConnectingStart;
-        public event EventHandler<WifiEventArgs>? ManagerConnectingEnd;
-        public event EventHandler<EventArgs>? ParserFailure;
-
         private readonly IDecoder decoder;
         private readonly IWifiUriParser uriParser;
         private readonly IWifiManager wifiManager;
@@ -27,9 +21,16 @@ namespace WifiConnect
             this.RegisterEvents();
         }
 
+        public event EventHandler<EventArgs>? DecoderStart;
+        public event EventHandler<DecoderEventArgs>? DecoderEnd;
+        public event EventHandler<EventArgs>? ManagerConnectingStart;
+        public event EventHandler<WifiEventArgs>? ManagerConnectingEnd;
+        public event EventHandler<EventArgs>? ParserFailure;
+        public event EventHandler<EventArgs>? ConnectionFailure;
+
         ~WifiConnect()
         {
-            this.DeregsterEvents();
+            this.DeregisterEvents();
         }
 
         public void TryToConnectFromImage(Bitmap? image)
@@ -49,16 +50,24 @@ namespace WifiConnect
             try
             {
                 WifiUri uri = this.uriParser.Parse(rawUri);
-                WifiUriField? SSID = uri.GetField(WifiUri.FieldName.SSID);
-                WifiUriField? pass = uri.GetField(WifiUri.FieldName.PASS);
-                if (SSID == null)
+                WifiUriField? ssid = uri.GetField(WifiUri.FieldName.Ssid);
+                WifiUriField? pass = uri.GetField(WifiUri.FieldName.Pass);
+                if (ssid == null)
                 {
                     throw new InvalidOperationException("ssid must not be null");
                 }
-                this.wifiManager.Connect(
-                    SSID.Value,
-                    pass?.Value
-                );
+
+                try
+                {
+                    this.wifiManager.Connect(
+                        ssid.Value,
+                        pass?.Value
+                    );
+                }
+                catch (Exception)
+                {
+                    this.OnConnectionFailure();
+                }
             }
             catch (Exception)
             {
@@ -74,7 +83,7 @@ namespace WifiConnect
             this.wifiManager.WifiConnectionEnd += this.Manager_End;
         }
 
-        private void DeregsterEvents()
+        private void DeregisterEvents()
         {
             this.decoder.DecodingStart -= this.Decoder_Start;
             this.decoder.DecodingEnd -= this.Decoder_End;
@@ -105,6 +114,11 @@ namespace WifiConnect
         private void OnParserFailure()
         {
             this.ParserFailure?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnConnectionFailure()
+        {
+            this.ConnectionFailure?.Invoke(this, EventArgs.Empty);
         }
     }
 }

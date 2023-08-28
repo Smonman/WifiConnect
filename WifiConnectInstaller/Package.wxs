@@ -1,40 +1,169 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <?define Name = "WifiConnect" ?>
+<?define Desc = "Connect to an available Wifi network via a QR code" ?>
 <?define Manufacturer = "Simon J. Kreuzpointner" ?>
+<?define ManufacturerShort = "SJK" ?>
 <?define Version = "1.0.0.0" ?>
 <?define UpgradeCode = "9fdda9a2-e56e-4d77-9aae-01ab130f2e83" ?>
 
-<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
-     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-  <Package
-    Name="$(Name)"
-    Manufacturer="$(Manufacturer)"
-    Version="$(Version)"
-    UpgradeCode="$(var.UpgradeCode)">
+<Wix xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+     xmlns="http://wixtoolset.org/schemas/v4/wxs">
+    <Package
+            Name="$(var.Name)"
+            Manufacturer="$(var.Manufacturer)"
+            Version="$(var.Version)"
+            UpgradeCode="$(var.UpgradeCode)"
+            Scope="perMachine">
 
-    <!-- Allow upgrades and prevent downgrades -->
-    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
+        <!-- Allow upgrades and prevent downgrades -->
+        <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
 
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFiles64Folder">
-        <Directory Id="ROOTDIRECTORY" Name="$(var.Manufacturer)">
-          <Directory Id="INSTALLDIR" Name="$(Name)" />
-        </Directory>
-      </Directory>
-    </Directory>
+        <!-- Suggested directory structure -->
+        <StandardDirectory Id="ProgramFiles64Folder">
+            <Directory Id="ROOTDIRECTORY" Name="$(var.Manufacturer)">
+                <Directory Id="INSTALLDIR" Name="$(var.Name)" />
+            </Directory>
+        </StandardDirectory>
 
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="WifiConnect.exe" Bitness="always64">
-        <File Id="WifiConnect.exe" Source="$(var.WifiConnect.TargetDir)publish\WifiConnect.exe"></File>
-        <RemoveFile Id="ALLFILES" Name="*.*" On="uninstall" />
-      </Component>
-    </DirectoryRef>
+        <StandardDirectory Id="ProgramMenuFolder">
+            <Directory Id="ApplicationProgramsFolder" Name="$(var.Name)" />
+        </StandardDirectory>
 
-    <Feature Id="Main">
-      <ComponentRef Id="WifiConnect.exe" />
-    </Feature>
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ApplicationShortcut" Guid="C091AE94-9BA5-4A80-90CA-E4A076DD3A49">
+                <Shortcut Id="ApplicationStartMenuShortcut"
+                          Name="$(var.Name)"
+                          Description="$(var.Desc)"
+                          Target="[#WifiConnect.exe]"
+                          WorkingDirectory="INSTALLDIR" />
+                <!-- Step 1: Add the uninstall shortcut to your installer package -->
+                <Shortcut Id="UninstallProduct"
+                          Name="Uninstall $(var.Name)"
+                          Description="Uninstalls $(var.Name)"
+                          Target="[System64Folder]msiexec.exe"
+                          Arguments="/x [ProductCode]" />
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
+                <RegistryValue Root="HKCU"
+                               Key="Software\$(var.ManufacturerShort)\$(var.Name)"
+                               Name="installed"
+                               Type="integer"
+                               Value="1" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
 
-    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLDIR" />
-  </Package>
+        <!-- What should be installed -->
+        <ComponentGroup Id="Components">
+            <Component Id="WifiConnect.exe"
+                       Bitness="always64"
+                       Guid="91DE1EB9-2CF5-4D51-A040-AAE8E289054F"
+                       Directory="INSTALLDIR">
+                <File Id="WifiConnect.exe"
+                      Source="$(var.WifiConnect.TargetDir)publish\WifiConnect.exe"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="AForge.dll"
+                       Guid="EEC1CE87-FCC1-445B-8CE7-8D7E474BD078"
+                       Directory="INSTALLDIR">
+                <File Id="AForge.dll"
+                      Source="$(var.WifiConnect.TargetDir)publish\AForge.dll"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="AForge.Video.DirectShow.dll"
+                       Guid="70435E57-B41E-45D5-A649-EF75A279C01E"
+                       Directory="INSTALLDIR">
+                <File Id="AForge.Video.DirectShow.dll"
+                      Source="$(var.WifiConnect.TargetDir)publish\AForge.Video.DirectShow.dll"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="AForge.Video.dll"
+                       Guid="D871DA73-E0F5-4CA0-842D-923030665FF3"
+                       Directory="INSTALLDIR">
+                <File Id="AForge.Video.dll"
+                      Source="$(var.WifiConnect.TargetDir)publish\AForge.Video.dll"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="SimpleWifi.dll"
+                       Guid="DB125775-0697-4DB4-8616-7018356B6DD5"
+                       Directory="INSTALLDIR">
+                <File Id="SimpleWifi.dll"
+                      Source="$(var.WifiConnect.TargetDir)publish\SimpleWifi.dll"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="WifiConnect.deps.json"
+                       Guid="A5F6ABE9-F19B-4208-A2CB-D8C92B82EDAC"
+                       Directory="INSTALLDIR">
+                <File Id="WifiConnect.deps.json"
+                      Source="$(var.WifiConnect.TargetDir)publish\WifiConnect.deps.json"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="WifiConnect.dll"
+                       Guid="0DFFE352-99A7-4159-9F7F-F6C809707CEC"
+                       Directory="INSTALLDIR">
+                <File Id="WifiConnect.dll"
+                      Source="$(var.WifiConnect.TargetDir)publish\WifiConnect.dll"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="WifiConnect.pdb"
+                       Guid="B14A997C-2553-4004-9AC6-5C2E16549CA7"
+                       Directory="INSTALLDIR">
+                <File Id="WifiConnect.pdb"
+                      Source="$(var.WifiConnect.TargetDir)publish\WifiConnect.pdb"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="WifiConnect.runtimeconfig.json"
+                       Guid="AB1AA4DE-93AB-4D3B-8574-38DB39E57660"
+                       Directory="INSTALLDIR">
+                <File Id="WifiConnect.runtimeconfig.json"
+                      Source="$(var.WifiConnect.TargetDir)publish\WifiConnect.runtimeconfig.json"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="zxing.dll"
+                       Guid="6B66A321-0B57-4A1D-96D2-6434F80B6FBC"
+                       Directory="INSTALLDIR">
+                <File Id="zxing.dll"
+                      Source="$(var.WifiConnect.TargetDir)publish\zxing.dll"
+                      KeyPath="yes" />
+            </Component>
+            <Component Id="ZXing.Windows.Compatability.dll"
+                       Guid="70D1374A-B2ED-4416-8D87-C33C169515AC"
+                       Directory="INSTALLDIR">
+                <File Id="ZXing.Windows.Compatability.dll"
+                      Source="$(var.WifiConnect.TargetDir)publish\ZXing.Windows.Compatibility.dll"
+                      KeyPath="yes" />
+            </Component>
+        </ComponentGroup>
+
+        <!-- Features -->
+        <Feature Id="Main"
+                 Title="$(var.Name) Application"
+                 Level="1"
+                 ConfigurableDirectory="INSTALLDIR"
+                 AllowAbsent="no">
+            <ComponentGroupRef Id="Components" />
+            <ComponentRef Id="ApplicationShortcut" />
+        </Feature>
+
+        <UI>
+            <!-- Simple UI to select the install location -->
+            <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLDIR">
+            </ui:WixUI>
+            <UIRef Id="WixUI_ErrorProgressText" />
+            <!-- Skip End User Licence Agreement -->
+            <Publish Dialog="WelcomeDlg"
+                     Control="Next"
+                     Event="NewDialog"
+                     Value="InstallDirDlg"
+                     Order="99"
+                     Condition="1">
+            </Publish>
+            <Publish Dialog="InstallDirDlg"
+                     Control="Back"
+                     Event="NewDialog"
+                     Value="WelcomeDlg"
+                     Order="99"
+                     Condition="1">
+            </Publish>
+        </UI>
+    </Package>
 </Wix>

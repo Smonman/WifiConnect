@@ -8,9 +8,6 @@ namespace WifiConnect.Decoder
     {
         private readonly IBarcodeReader<Bitmap> barcodeReader;
 
-        public event EventHandler<EventArgs>? DecodingStart;
-        public event EventHandler<DecoderEventArgs>? DecodingEnd;
-
         public Decoder()
         {
             this.barcodeReader = new BarcodeReader
@@ -19,6 +16,9 @@ namespace WifiConnect.Decoder
                 Options = new DecodingOptions { TryHarder = true }
             };
         }
+
+        public event EventHandler<EventArgs>? DecodingStart;
+        public event EventHandler<DecoderEventArgs>? DecodingEnd;
 
         public string? Decode(Bitmap image)
         {
@@ -30,23 +30,24 @@ namespace WifiConnect.Decoder
                 this.OnDecodingSuccess(resultString);
                 return resultString;
             }
+
             this.OnDecodingFailure();
             return null;
         }
 
         private void OnDecodingStart()
         {
-            DecodingStart?.Invoke(this, EventArgs.Empty);
+            this.DecodingStart?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnDecodingSuccess(string result)
         {
-            DecodingEnd?.Invoke(this, new DecoderEventArgs(result));
+            this.DecodingEnd?.Invoke(this, new DecoderEventArgs(result));
         }
 
         private void OnDecodingFailure()
         {
-            DecodingEnd?.Invoke(this, new DecoderEventArgs());
+            this.DecodingEnd?.Invoke(this, new DecoderEventArgs());
         }
     }
 }

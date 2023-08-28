@@ -7,7 +7,7 @@ namespace WifiConnect.Wifi.URI.Parser
 {
     internal partial class WifiUriParser : Validateable<string>, IWifiUriParser
     {
-        private static readonly char[] escapedCharacters = { '\\', ';', ',', '"', ':' };
+        private static readonly char[] EscapedCharacters = { '\\', ';', ',', '"', ':' };
         private string? uri;
         private WifiUri? wifiUri;
 
@@ -40,17 +40,18 @@ namespace WifiConnect.Wifi.URI.Parser
         private static IEnumerable<string> SanitizeFields(IEnumerable<string> rawFields)
         {
             return rawFields
-                .Select(e => e.TrimEnd(new char[] { ';' }))
+                .Select(e => e.TrimEnd(new[] { ';' }))
                 .Select(ReplaceEscapedCharacters)
                 .Where(e => e.Length > 0);
         }
 
         private static string ReplaceEscapedCharacters(string rawField)
         {
-            foreach (char escaped in WifiUriParser.escapedCharacters)
+            foreach (char escaped in EscapedCharacters)
             {
                 rawField = rawField.Replace($"\\{escaped}", escaped.ToString());
             }
+
             return rawField;
         }
 
@@ -65,6 +66,7 @@ namespace WifiConnect.Wifi.URI.Parser
             {
                 _ = result.Fields.Add(uf);
             }
+
             return result;
         }
 
@@ -76,6 +78,7 @@ namespace WifiConnect.Wifi.URI.Parser
                 {
                     throw new ValidationException("invalid structure");
                 }
+
                 this.wifiUri.Validate();
             }
         }

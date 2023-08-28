@@ -15,7 +15,7 @@ namespace WifiConnect.Wifi.URI.Parser.Validation
         {
             if (!this.values.Contains(input))
             {
-                throw new ValidationException($"'{input}' must be contained in [{String.Join(',', this.values)}]");
+                throw new ValidationException($"'{input}' must be contained in [{string.Join(',', this.values)}]");
             }
         }
     }

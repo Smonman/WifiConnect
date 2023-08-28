@@ -34,10 +34,5 @@ namespace WifiConnectTest
             WifiUriParser parser = new();
             _ = Assert.ThrowsException<InvalidFormatException>(() => parser.Parse(uri));
         }
-
-        public void Test_Parse_SSID(string uri)
-        {
-
-        }
     }
 }
