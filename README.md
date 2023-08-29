@@ -14,21 +14,34 @@ information [here](https://github.com/zxing/zxing/wiki/Barcode-Contents#wi-fi-ne
 This tries to connect to an available wireless network, based on a [QR code](https://en.wikipedia.org/wiki/QR_code),
 containing required information.
 
-## What do I need?
+## FAQ
+
+### What do I need?
 
 - A webcam
+- Wifi capabilities
 
-## Which platforms are supported?
+### How do I install this application?
+
+You have three options:
+
+1. [Download the source files, and compile it yourself](https://github.com/Smonman/WifiConnect/archive/refs/tags/v1.0.0.zip)
+2. [Download the compiled files, and extract them to the a location of your choosing](https://github.com/Smonman/WifiConnect/releases/latest/download/WifiConnect_v1.0.0.zip)
+3. [Let the wizard do the work for you](https://github.com/Smonman/WifiConnect/releases/latest/download/WifiConnectInstaller.msi)
+
+All needed files are found [here](https://github.com/Smonman/WifiConnect/releases)
+
+### Which platforms are supported?
 
 - Windows (tested on Windows 10)
 
-## Is this secure?
+### Is this secure?
 
 It is important to note, that information contained in the QR code will be used as-is by this application. The
 application never shows this information explicitly (apart from the networks name), nor does it persit it outside of its
 lifecycle.
 
-## What must the QR code contain?
+### What must the QR code contain?
 
 Take a look at [this format](https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network).
 
