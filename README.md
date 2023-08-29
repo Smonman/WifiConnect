@@ -25,9 +25,9 @@ containing required information.
 
 You have three options:
 
-1. [Download the source files, and compile it yourself](https://github.com/Smonman/WifiConnect/archive/refs/tags/v1.0.0.zip)
-2. [Download the compiled files, and extract them to the a location of your choosing](https://github.com/Smonman/WifiConnect/releases/latest/download/WifiConnect_v1.0.0.zip)
-3. [Let the wizard do the work for you](https://github.com/Smonman/WifiConnect/releases/latest/download/WifiConnectInstaller.msi)
+- [Download the source files, and compile it yourself](https://github.com/Smonman/WifiConnect/archive/refs/tags/v1.0.0.zip)
+- [Download the compiled files, and extract them to the a location of your choosing](https://github.com/Smonman/WifiConnect/releases/latest/download/WifiConnect_v1.0.0.zip)
+- [Let the wizard do the work for you](https://github.com/Smonman/WifiConnect/releases/latest/download/WifiConnectInstaller.msi)
 
 All needed files are found [here](https://github.com/Smonman/WifiConnect/releases)
 
