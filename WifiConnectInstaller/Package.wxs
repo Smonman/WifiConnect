@@ -16,6 +16,9 @@
             UpgradeCode="$(var.UpgradeCode)"
             Scope="perMachine">
 
+        <!-- Embed the .cab file -->
+        <MediaTemplate EmbedCab="yes" />
+
         <!-- Allow upgrades and prevent downgrades -->
         <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
 
