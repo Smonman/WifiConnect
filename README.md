@@ -1,5 +1,7 @@
 # WifiConnect
 
+![icon_small](https://github.com/Smonman/WifiConnect/assets/36928284/39ff8c41-5772-45c1-b064-06ba450e0662)
+
 _Connect to an available Wifi network via a QR code on Windows._
 
 Connect to a Wifi using a QR code
@@ -29,3 +31,7 @@ lifecycle.
 ## What must the QR code contain?
 
 Take a look at [this format](https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network).
+
+## Known Issues
+
+This application does not support the [OBS virtual camera](https://obsproject.com/kb/virtual-camera-guide). This won't be fixed in the foreseeable future, sorry.
