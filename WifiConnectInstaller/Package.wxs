@@ -19,6 +19,10 @@
         <!-- Allow upgrades and prevent downgrades -->
         <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
 
+        <!-- Icons -->
+        <Icon Id="icon.ico" SourceFile="$(var.WifiConnect.ProjectDir)Resources\icon_small.ico" />
+        <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
         <!-- Suggested directory structure -->
         <StandardDirectory Id="ProgramFiles64Folder">
             <Directory Id="ROOTDIRECTORY" Name="$(var.Manufacturer)">
@@ -36,8 +40,9 @@
                           Name="$(var.Name)"
                           Description="$(var.Desc)"
                           Target="[#WifiConnect.exe]"
-                          WorkingDirectory="INSTALLDIR" />
-                <!-- Step 1: Add the uninstall shortcut to your installer package -->
+                          WorkingDirectory="INSTALLDIR">
+                    <Icon Id="StartMenuIcon.ico" SourceFile="$(var.WifiConnect.ProjectDir)Resources\icon.ico" />
+                </Shortcut>
                 <Shortcut Id="UninstallProduct"
                           Name="Uninstall $(var.Name)"
                           Description="Uninstalls $(var.Name)"

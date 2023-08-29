@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             CamerasComboBox = new ComboBox();
             label1 = new Label();
             PictureBox = new PictureBox();
@@ -106,9 +107,9 @@
             this.Controls.Add(label1);
             this.Controls.Add(CamerasComboBox);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.Icon = (Icon)resources.GetObject("$this.Icon");
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.ShowIcon = false;
             this.Text = "WifiConnect";
             this.FormClosing += this.MainForm_FormClosing;
             this.Load += this.MainForm_Load;
