@@ -26,7 +26,7 @@ containing required information.
 You have three options:
 
 - [Download the source files, and compile it yourself](https://github.com/Smonman/WifiConnect/archive/refs/tags/v1.0.0.zip)
-- [Download the compiled files, and extract them to the a location of your choosing](https://github.com/Smonman/WifiConnect/releases/latest/download/WifiConnect_v1.0.0.zip)
+- [Download the compiled files, and extract them to a location of your choosing](https://github.com/Smonman/WifiConnect/releases/latest/download/WifiConnect_v1.0.0.zip)
 - [Let the wizard do the work for you](https://github.com/Smonman/WifiConnect/releases/latest/download/WifiConnectInstaller.msi)
 
 All needed files are found [here](https://github.com/Smonman/WifiConnect/releases)
@@ -39,7 +39,7 @@ All needed files are found [here](https://github.com/Smonman/WifiConnect/release
 
 It is important to note, that information contained in the QR code will be used as-is by this application. The
 application never shows this information explicitly (apart from the networks name), nor does it persit it outside of its
-lifecycle.
+lifecycle. The contents of the QR code are stored unencrypted.
 
 ### What must the QR code contain?
 
